@@ -5,7 +5,7 @@ import appFetch from '../../../helpers/fetch';
 /* eslint react/prop-types: 0 */
 export const Summary = ({ transcript }) => {
     const [summaryState, setSummaryState] = useState('none');
-    const [prompt, setPrompt] = useState('general_summary');
+    const [prompt, setPrompt] = useState('objection_handle');
     const [summary, setSummary] = useState();
 
     const generateSummary = async () => {
@@ -20,6 +20,7 @@ export const Summary = ({ transcript }) => {
 
         if (res.status < 299) {
             const data = await res.json();
+            console.log('this is the data', data);
             setSummaryState('none');
             setSummary(data.summary);
         } else {
@@ -32,6 +33,7 @@ export const Summary = ({ transcript }) => {
             <h3>AI Summary</h3>
             <p className="InMeeting-summary-text">{summary}</p>
             <select value={prompt} onChange={(e) => setPrompt(e.target.value)}>
+                <option value="objection_handle">Objection Handle</option>
                 <option value="general_summary">Summarize this meeting</option>
                 <option value="action_items">Generate action items</option>
                 <option value="decisions">Outline decisions made</option>
@@ -45,7 +47,7 @@ export const Summary = ({ transcript }) => {
                     ['summarising', 'error'].includes(summaryState)
                 }
             >
-                {summaryState === 'none' && 'Ask Claude'}
+                {summaryState === 'none' && 'Ask CoCloser'}
                 {summaryState === 'summarising' && 'Thinking...'}
                 {summaryState === 'error' && 'An Error Occurred'}
             </button>

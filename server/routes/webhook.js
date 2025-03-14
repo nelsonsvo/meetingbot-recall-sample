@@ -25,7 +25,10 @@ router.post('/transcription', async (req, res, next) => {
 
         console.log('transcription webhook received: ', req.body);
 
-        const { bot_id, transcript } = req.body.data;
+        const bot_id = req.body.data.bot.id;
+        const transcript = req.body.data.data;
+
+        console.log('transcript', transcript);
 
         if (!db.transcripts[bot_id]) {
             db.transcripts[bot_id] = [];

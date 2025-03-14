@@ -57,19 +57,23 @@ router.post('/start-recording', session, async (req, res, next) => {
         const bot = await recallFetch('/api/v1/bot', {
             method: 'POST',
             body: JSON.stringify({
-                bot_name: `${process.env.BOT_NAME} Notetaker`,
+                bot_name: `${process.env.BOT_NAME}`,
                 meeting_url: req.body.meetingUrl,
-                transcription_options: {
-                    provider: 'default',
+                recording_config: {
+                    transcript: {
+                        provider: {
+                            gladia_v1_streaming: {},
+                        },
+                    },
+                    realtime_endpoints: [
+                        {
+                            type: 'webhook',
+                            url: `${zoomApp.publicUrl}/webhook/transcription?secret=${zoomApp.webhookSecret}`,
+                            events: ['transcript.data'],
+                        },
+                    ],
                 },
-                real_time_transcription: {
-                    destination_url: `${zoomApp.publicUrl}/webhook/transcription?secret=${zoomApp.webhookSecret}`,
-                    partial_results: true,
-                },
-                zoom: {
-                    request_recording_permission_on_host_join: true,
-                    require_recording_permission: true,
-                },
+
                 /* Uncomment this to enable the bot to display an image.
                 automatic_video_output: {
                     in_call_recording: {
@@ -163,8 +167,7 @@ router.get('/recording-state', session, async (req, res, next) => {
 
 const PROMPTS = {
     _template: `
-Human: You are a virtual assistant, and you are taking notes for a meeting. 
-You are diligent, polite and slightly humerous at times.
+Human: You are a virtual sales and closing expert and you are providing insight based on the transcript for a sales call. You are diligent, polite and assertive.
 Human: Here is the a transcript of the meeting, including the speaker's name:
 
 Human: <transcript>
@@ -175,11 +178,13 @@ Human: Only answer the following question directly, do not add any additional co
 Human: {{prompt}}
 
 Assistant:`,
-    general_summary: 'Can you summarize the meeting? Please be concise.',
-    action_items: 'What are the action items from the meeting?',
-    decisions: 'What decisions were made in the meeting?',
-    next_steps: 'What are the next steps?',
-    key_takeaways: 'What are the key takeaways?',
+    objection_handle:
+        'Please handle these objections like an elite sales person and be concise.',
+    // general_summary: 'Can you summarize the meeting? Please be concise.',
+    // action_items: 'What are the action items from the meeting?',
+    // decisions: 'What decisions were made in the meeting?',
+    // next_steps: 'What are the next steps?',
+    // key_takeaways: 'What are the key takeaways?',
 };
 
 /*
@@ -217,17 +222,19 @@ router.post('/summarize', session, async (req, res, next) => {
 
         console.log('completePrompt', completePrompt);
 
-        const data = await anthropicFetch('/v1/complete', {
+        const data = await anthropicFetch('/v1/messages', {
             method: 'POST',
             body: JSON.stringify({
-                model: 'claude-2',
-                prompt: completePrompt,
-                max_tokens_to_sample: 1024,
+                model: 'claude-3-7-sonnet-20250219',
+                max_tokens: 1024,
+                messages: [{ role: 'user', content: completePrompt }],
             }),
         });
 
+        console.log(data);
+
         return res.json({
-            summary: data.completion,
+            summary: data.content[0].text,
         });
     } catch (e) {
         next(handleError(e));
