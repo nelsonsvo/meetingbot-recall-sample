@@ -179,7 +179,7 @@ Human: {{prompt}}
 
 Assistant:`,
     objection_handle:
-        'Please handle these objections like an elite sales person and be concise.',
+        'Please handle these objections like an elite sales person and be concise, please format you answer as bullet points and address each objection separately',
     // general_summary: 'Can you summarize the meeting? Please be concise.',
     // action_items: 'What are the action items from the meeting?',
     // decisions: 'What decisions were made in the meeting?',
@@ -207,15 +207,17 @@ router.post('/summarize', session, async (req, res, next) => {
         }
 
         const transcript = db.transcripts[botId] || [];
+
+        console.log('transcript!!!!', transcript);
         const finalTranscript = transcript
-            .filter((utterance) => utterance.is_final)
             .map(
-                (utterance) =>
-                    `Human: ${utterance.speaker || 'Unknown'}: ${utterance.words
-                        .map((w) => w.text)
-                        .join(' ')}`
+                (entry) =>
+                    `Human: ${
+                        entry.participant?.name || 'Unknown'
+                    }: ${entry.words.map((w) => w.text).join(' ')}`
             )
             .join('\n');
+
         const completePrompt = PROMPTS._template
             .replace('{{transcript}}', finalTranscript)
             .replace('{{prompt}}', prompt);

@@ -31,7 +31,7 @@ export const Summary = ({ transcript }) => {
     return (
         <div className="InMeeting-summary">
             <h3>AI Summary</h3>
-            <p className="InMeeting-summary-text">{summary}</p>
+            <p className="InMeeting-summary-text">{FormattedText(summary)}</p>
             <select value={prompt} onChange={(e) => setPrompt(e.target.value)}>
                 <option value="objection_handle">Objection Handle</option>
                 <option value="general_summary">Summarize this meeting</option>
@@ -54,5 +54,18 @@ export const Summary = ({ transcript }) => {
         </div>
     );
 };
+const FormattedText = (text) => {
+    if (!text) return null;
 
+    // Regular expression to match words wrapped in '**'
+    const formattedText = text.split('**').map((part, index) => {
+        // If the part is at an odd index, it should be bold
+        if (index % 2 !== 0) {
+            return <strong key={index}>{part}</strong>;
+        }
+        return part;
+    });
+
+    return <div>{formattedText}</div>;
+};
 export default Summary;
