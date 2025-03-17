@@ -8,3 +8,7 @@
   text-align: center;
   opacity: 0.5;
 }
+
+:root {
+  --primary-color: rgb(50, 173, 255); /* Define the variable */
+}

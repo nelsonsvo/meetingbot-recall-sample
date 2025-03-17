@@ -9,7 +9,7 @@
     margin: 0.5rem auto;
     height: 2rem;
     width: 100%;
-    border: 1px solid #4192a8;
+    border: 1px solid var(--primary-color);
     border-radius: 0.25rem;
     background-color: #fff;
     color: #333;

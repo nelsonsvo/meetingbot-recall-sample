@@ -21,9 +21,9 @@
 .InMeeting button {
     margin: 0 auto;
     padding: 0.5rem 1rem;
-    border: 1px solid #4192a8;
+    border: 1px solid var(--primary-color);
     border-radius: 0.25rem;
-    background-color: #4192a8;
+    background-color: var(--primary-color);
     color: #fff;
     font-size: 1rem;
     font-weight: 300;
@@ -31,7 +31,34 @@
     width: 100%;
 }
 
+.InMeeting input {
+    margin: 0.5rem auto;
+    height: 2rem;
+    width: 100%;
+    border: 1px solid var(--primary-color);
+    border-radius: 0.25rem;
+    background-color: #fff;
+    color: #333;
+    font-size: 0.75rem;
+    font-weight: 300;
+    cursor: pointer;
+    display: block;
+    font-family: inherit;
+  }
+  
+
+
 .InMeeting button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+header {
+    text-align: center;
+}
+img {
+    display: block;
+    margin: 0 auto;
+    width: 300px;
+    height: auto;
 }

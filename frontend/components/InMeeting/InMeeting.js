@@ -8,6 +8,7 @@ import Summary from './Summary/Summary';
 function InMeeting() {
     const [recordingState, setRecordingState] = useState('stopped');
     const [transcript, setTranscript] = useState([]);
+    const [product, setProduct] = useState('');
 
     const toggleRecording = async () => {
         if (recordingState === 'stopped') {
@@ -81,6 +82,11 @@ function InMeeting() {
         setTranscript(transcript);
     };
 
+    const onProductChange = (e) => {
+        console.log('prpoduct change');
+        setProduct(e.target.value);
+    };
+
     useEffect(() => {
         refreshState();
     }, []);
@@ -93,11 +99,24 @@ function InMeeting() {
 
     return (
         <div className="InMeeting">
-            <header>
-                <h1>CoCloser Notetaker</h1>
+            <header className="header">
+                <img
+                    className="hero-image"
+                    src="/logo.jpg"
+                    alt="CoCloser Notetaker Logo"
+                />
             </header>
 
             <h3>Meeting Transcript</h3>
+            <input
+                className="InMeeting"
+                onChange={onProductChange}
+                type="text"
+                id="product"
+                name="product"
+                placeholder="Whats your product?"
+            />
+
             <Transcript transcript={transcript} />
 
             <div className="InMeeting-record">
@@ -126,7 +145,7 @@ function InMeeting() {
                 </button>
             </div>
 
-            <Summary transcript={transcript} />
+            <Summary product={product} transcript={transcript} />
         </div>
     );
 }

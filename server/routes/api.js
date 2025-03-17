@@ -177,9 +177,11 @@ Human: </transcript>
 Human: Only answer the following question directly, do not add any additional comments or information.
 Human: {{prompt}}
 
+Human: You are selling this product: {{product}}
+
 Assistant:`,
     objection_handle:
-        'Please handle these objections like an elite sales person and be concise, please format you answer as bullet points and address each objection separately',
+        'Please handle these objections like an elite sales person and tailor you answers to the product you are selling and be concise, please format you answer as bullet points and address each objection separately, also try to avoid talking about other clients and rather focus on them and reframing their perspective, also try to keep your language friendly and easy to understand like you are talking to a friend.',
     // general_summary: 'Can you summarize the meeting? Please be concise.',
     // action_items: 'What are the action items from the meeting?',
     // decisions: 'What decisions were made in the meeting?',
@@ -197,6 +199,7 @@ router.post('/summarize', session, async (req, res, next) => {
 
         const botId = req.session.botId;
         const prompt = PROMPTS[req.body.prompt];
+        const product = req.body.product;
 
         if (!botId) {
             return res.status(400).json({ error: 'Missing botId' });
@@ -220,7 +223,8 @@ router.post('/summarize', session, async (req, res, next) => {
 
         const completePrompt = PROMPTS._template
             .replace('{{transcript}}', finalTranscript)
-            .replace('{{prompt}}', prompt);
+            .replace('{{prompt}}', prompt)
+            .replace('{{product}}', product);
 
         console.log('completePrompt', completePrompt);
 

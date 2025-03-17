@@ -3,7 +3,7 @@ import './Summary.css';
 import appFetch from '../../../helpers/fetch';
 
 /* eslint react/prop-types: 0 */
-export const Summary = ({ transcript }) => {
+export const Summary = ({ transcript, product }) => {
     const [summaryState, setSummaryState] = useState('none');
     const [prompt, setPrompt] = useState('objection_handle');
     const [summary, setSummary] = useState();
@@ -15,6 +15,7 @@ export const Summary = ({ transcript }) => {
             method: 'POST',
             body: JSON.stringify({
                 prompt,
+                product,
             }),
         });
 
@@ -30,15 +31,15 @@ export const Summary = ({ transcript }) => {
 
     return (
         <div className="InMeeting-summary">
-            <h3>AI Summary</h3>
+            <h3>AI Suggestions</h3>
             <p className="InMeeting-summary-text">{FormattedText(summary)}</p>
             <select value={prompt} onChange={(e) => setPrompt(e.target.value)}>
                 <option value="objection_handle">Objection Handle</option>
-                <option value="general_summary">Summarize this meeting</option>
+                {/* <option value="general_summary">Summarize this meeting</option>
                 <option value="action_items">Generate action items</option>
                 <option value="decisions">Outline decisions made</option>
                 <option value="next_steps">Highlight next steps</option>
-                <option value="key_takeaways">Find key takeaways</option>
+                <option value="key_takeaways">Find key takeaways</option> */}
             </select>
             <button
                 onClick={generateSummary}
@@ -47,7 +48,7 @@ export const Summary = ({ transcript }) => {
                     ['summarising', 'error'].includes(summaryState)
                 }
             >
-                {summaryState === 'none' && 'Ask CoCloser'}
+                {summaryState === 'none' && 'Get Suggestions'}
                 {summaryState === 'summarising' && 'Thinking...'}
                 {summaryState === 'error' && 'An Error Occurred'}
             </button>

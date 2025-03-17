@@ -12,5 +12,5 @@
 }
 
 .Installer-link {
-    color: #4192a8;
+    color: var(--primary-color);
 }
